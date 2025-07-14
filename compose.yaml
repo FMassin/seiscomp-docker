@@ -1,6 +1,7 @@
 services:
     seiscomp:
         container_name: seiscomp-docker
+        hostname: seiscomp-in-a-Docker
         build: seiscomp-docker
         platform: linux/amd64 # for M1 users
         ports:
