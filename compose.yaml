@@ -1,5 +1,6 @@
 services:
     seiscomp:
+        image: ghcr.io/fmassin/seiscomp-docker:main
         container_name: seiscomp-docker
         hostname: seiscomp-in-a-Docker
         build: seiscomp-docker
