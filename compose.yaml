@@ -1,13 +1,19 @@
 services:
-    seiscomp-gui:
-        container_name: seiscomp-gui
-        build: seiscomp-gui
+    seiscomp:
+        container_name: seiscomp-docker
+        build: seiscomp-docker
         platform: linux/amd64 # for M1 users
         ports:
             - "2224:22"
+        extra_hosts:
+          - "host.docker.internal:host-gateway"
+        restart: unless-stopped
         volumes:
-            - $HOME/seiscomp-gui/cfg:/home/sysop/.seiscomp:rw
-            - $HOME/seiscomp-gui/maps:/opt/seiscomp/share/maps:ro
-            - $HOME/seiscomp-gui/nll:/opt/seiscomp/share/nll:rw
-            - $HOME/seiscomp-gui/hypo71:/opt/seiscomp/share/hypo71:rw
+            - seiscompsysop:/home/sysop
+            - $SEISCOMP_ROOT/etc/:/home/sysop/.seiscomp:ro
+            - $SEISCOMP_ROOT/share/maps:/opt/seiscomp/share/maps:ro
+            - $SEISCOMP_ROOT/share/nll:/opt/seiscomp/share/nll:ro
+            - $SEISCOMP_ROOT/share/hypo71:/opt/seiscomp/share/hypo71:ro
         tty: true        
+volumes:
+  seiscompsysop:
