@@ -1,6 +1,6 @@
 FROM debian:12-slim
 
-LABEL org.opencontainers.image.authors="boissier@ipgp.fr"
+LABEL org.opencontainers.image.authors="fmassin@ethz.ch"
 LABEL version="1.0"
 LABEL description="Docker image running SeisComP version 6 on Debian 12."
 
@@ -111,7 +111,7 @@ RUN rm -rf gsm/sync \
 
 ## Install SeisComP deps
 RUN sed -i 's;apt;apt -y;' $INSTALL_DIR/share/deps/*/*/install-*.sh \
-    && $INSTALL_DIR/bin/seiscomp install-deps base gui
+    && $INSTALL_DIR/bin/seiscomp install-deps base gui postgresql-server
 
 ## SeisComP environment configuration
 RUN $INSTALL_DIR/bin/seiscomp print env >> /home/sysop/.profile
