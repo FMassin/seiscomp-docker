@@ -27,17 +27,19 @@ Start Docker Desktop (Applications folder) : it will start the docker daemon.
 ### Build image and create container
 
 #### Update configuration
-The file `compose.yaml` contains instructions to mount host
-directories on the container.
-Typically, when using SeiSComP GUI, you would need :
- * a directory containing `.cfg` personal configuration files for each application
+The file `compose.yaml` contains instructions to mount host directories on the container.
+
+Typically, when using SeiSComP docker, you would need :
+ * a directory containing system `.cfg` configuration files for each application
  * a directory containing map tiles
  * directories containing travel time files for locators
 
-By default, configuration files are expected on `$HOME/seiscomp/etc/` on the host computer. They are mounted on `$HOME/.seiscomp` in the container.
-By default, map tiles directory is expected on `$HOME/seiscomp/share/maps` on the host computer. It is mounted on `/opt/seiscomp/share/maps` in the container.
-By default, NonLinLoc configuration and time travel files are expected on `$HOME/seiscomp/share/nll` on the host computer. It is mounted on `/opt/seiscomp/share/nll` in the container.
-By default, Hypo71PC configuration files and velocity models are expected to be found on `$HOME/seiscomp/share/hypo71` on the host computer. It is mounted on `/opt/seiscomp/share/hypo71` in the container.
+By default:
+ * Permanent user configuration files and data are on a `seiscompsysop` docker volume on the host computer. They are mounted on `/home/sysop` in the container (read and write).
+ * system configuration files are expected on `$SEISCOMP_ROOT/etc/` on the host computer. They are mounted on `/opt/seiscomp/etc/` in the container (read only).
+By default, map tiles directory is expected on `$SEISCOMP_ROOT/share/maps` on the host computer. It is mounted on `/opt/seiscomp/share/maps` in the container (read only).
+ * NonLinLoc configuration and time travel files are expected on `$SEISCOMP_ROOT/share/nll` on the host computer. It is mounted on `/opt/seiscomp/share/nll` in the container (read only).
+ * Hypo71PC configuration files and velocity models are expected to be found on `$SEISCOMP_ROOT/share/hypo71` on the host computer. It is mounted on `/opt/seiscomp/share/hypo71` in the container (read only).
 
 You can update the host path for each volume or comment the unused ones in the `compose.yaml` file, section `volumes`.
 
