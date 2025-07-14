@@ -1,5 +1,6 @@
-# seiscomp-docker
-SeisComP in a docker container
+# SeisComP in a Docker
+
+SeisComP in a docker container for running GUI or processing  module(s) as client or microservice. 
 
 ## Mac install
 

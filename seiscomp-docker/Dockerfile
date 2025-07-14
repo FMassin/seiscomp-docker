@@ -41,13 +41,7 @@ RUN apt-get update \
         vim \
         git \
         # Gempa gsm dependencies
-        python3-cryptography \
-        python3-requests \
-        python3-tqdm \
-        python3-natsort \
-        python3-humanize \
-        python3-gnupg \
-        python3-bs4 \
+        python3.11-venv \
         # Useful for X11 forwarding
         mesa-utils \
         libgl1-mesa-glx \
@@ -92,9 +86,13 @@ RUN mkdir -p $CFG_LOG_DIR \
     && chown -R sysop:sysop /home/sysop \
     && mkdir -p $INSTALL_DIR \
     && chown -R sysop:sysop $INSTALL_DIR \
-    && chmod g+w $INSTALL_DIR
+    && chmod g+w $INSTALL_DIR \
+    && chown root:sysop /etc/profile \
+    && chmod g+rw /etc/profile
 
 USER sysop
+
+RUN touch /etc/profile
 
 ## Install GSM
 RUN wget https://data.gempa.de/gsm/gempa-gsm.tar.gz \
@@ -114,23 +112,24 @@ RUN sed -i 's;apt;apt -y;' $INSTALL_DIR/share/deps/*/*/install-*.sh \
     && $INSTALL_DIR/bin/seiscomp install-deps base gui postgresql-server
 
 ## SeisComP environment configuration
-RUN $INSTALL_DIR/bin/seiscomp print env >> /home/sysop/.profile
+#RUN $INSTALL_DIR/bin/seiscomp print env >> /home/sysop/.profile
+RUN $INSTALL_DIR/bin/seiscomp print env >> /etc/profile
 
 ## TODO : monter le volume local de conf et log vers .seiscomp 
 
 # Copy user-defined configuration files
-#COPY ./seiscomp/etc/* $INSTALL_DIR/etc/
-#RUN find $INSTALL_DIR/etc/ -type f -name "*.cfg" -print0 | xargs -0 sudo chmod 644 \
-#    && find $INSTALL_DIR/etc/ -type f -name "*.cfg" -print0 | xargs -0 sudo chown sysop:sysop
+##COPY ./seiscomp/etc/* $INSTALL_DIR/etc/
+##RUN find $INSTALL_DIR/etc/ -type f -name "*.cfg" -print0 | xargs -0 sudo chmod 644 \
+##    && find $INSTALL_DIR/etc/ -type f -name "*.cfg" -print0 | xargs -0 sudo chown sysop:sysop
 
 # Start sshd in foreground - useful for "detached" mode
 CMD sudo /usr/sbin/sshd -D
 
 ## Build :
-# docker build -t seiscomp-version6:latest .
+## docker build -t seiscomp-version6:latest .
 ## Lancer le conteneur en arrière plan
-# docker run -d -p 2222:22 \
-#            -v /HOST/PATH/TO/seiscomp/share/nll:/INSTALL_DIR/share/nll \
-#            -v /HOST/PATH/TO/seiscomp/share/maps/OCMap:/INSTALL_DIR/share/maps/OCMap \
-#            -v /HOST/PATH/TO/.seiscomp/:/HOME/.seiscomp \
-#            --name scolv seiscomp-version6:latest
+## docker run -d -p 2222:22 \
+##            -v /HOST/PATH/TO/seiscomp/share/nll:/INSTALL_DIR/share/nll \
+##            -v /HOST/PATH/TO/seiscomp/share/maps/OCMap:/INSTALL_DIR/share/maps/OCMap \
+##            -v /HOST/PATH/TO/.seiscomp/:/HOME/.seiscomp \
+##            --name scolv seiscomp-version6:latest
